@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { ListGroup } from "react-bootstrap";
 import { Country } from "../models/countries.interface";
 import { getCountries } from "../services/api";
@@ -39,16 +39,19 @@ export const CountryItem = React.memo(({ country }: { country: Country }) => {
   const navigate = useNavigate();
 
   const changeRoute = React.useCallback((countryCodeValue: string) => {
-    navigate(`/country/${countryCodeValue}`);
+    console.log("Aaa")
+    navigate(`/country/${countryCodeValue.toLowerCase()}`);
   }, []);
 
   return (
-    <ListGroup.Item
-      onClick={() => changeRoute(country.countryCode)}
-      action
-      style={{ cursor: "pointer" }}
-    >
-      {country.name}
-    </ListGroup.Item>
+    <Suspense fallback={<Loading />}>
+      <ListGroup.Item
+        onClick={() => changeRoute(country.countryCode)}
+        action
+        style={{ cursor: "pointer" }}
+      >
+        {country.name}
+      </ListGroup.Item>
+    </Suspense>
   );
 });

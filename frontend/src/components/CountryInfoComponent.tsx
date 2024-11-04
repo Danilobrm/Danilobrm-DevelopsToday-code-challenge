@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef } from "react";
+import React, { Suspense } from "react";
 import { CountryInfo } from "../models/countries.interface";
 import { Button, Image, ListGroup } from "react-bootstrap";
 import { CountryItem } from "./CountriesListComponent";
@@ -57,11 +57,7 @@ export default function CountryInfoComponent({
               <p>border country not found.</p>
             )}
             <h3 style={{ padding: "20px 0" }}>Population Chart:</h3>
-            {countryInfo.countryPopulation.length ? (
-              <PopulationChart data={countryInfo.countryPopulation} />
-            ) : (
-              <p>no chart available.</p>
-            )}
+            <PopulationChart data={countryInfo.countryPopulation} />
           </div>
         </Suspense>
       ) : (

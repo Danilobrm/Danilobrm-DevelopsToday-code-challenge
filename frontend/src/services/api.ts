@@ -20,17 +20,11 @@ export const getCountryInfo = async (
   countryCode: string
 ): Promise<CountryInfo | null> => {
   try {
-    const response = await fetch(
-      `${API_URL}/countryInfo/${countryCode}`,
-      {
-        method: "GET",
-      }
-    );
-
+    const response = await fetch(`${API_URL}/country/${countryCode}`, {
+      method: "GET",
+    });
     return await response.json();
   } catch (error: unknown) {
-    console.log(error);
-    console.log("caiu aqui");
     return null;
   }
 };

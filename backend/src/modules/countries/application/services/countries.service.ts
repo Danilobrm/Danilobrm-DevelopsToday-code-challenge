@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { Country, CountryInfo } from '../../domain/entities/countries.entity';
+import {
+  Country,
+  CountryFlag,
+  CountryInfo,
+  CountryPopulation,
+} from '../../domain/entities/countries.entity';
 import { CountriesRepositoryService } from '../../infrastructure/repositories/countries-repository/countries-repository.service';
+import { AppError } from 'src/common/errors/AppError';
 
 @Injectable()
 export class CountriesService {
@@ -9,41 +15,37 @@ export class CountriesService {
   ) {}
 
   async getAvailableCountries(): Promise<Country[]> {
-    return this.countriesRepository.getAvailableCountries();
+    return this.countriesRepository.getAvailableCountries(); //iso2
   }
 
   async getCountryInfo(countryCode: string): Promise<CountryInfo> {
-    const countryInfo =
-      await this.countriesRepository.getCountryInfo(countryCode);
+    return await this.countriesRepository.getCountryInfo(countryCode);
+  }
 
-    const countryFlagData = await this.countriesRepository
-      .getCountriesFlag()
-      .then((countriesFlag) =>
-        countriesFlag.data.find(
-          (country) =>
-            country && 
-            (country.iso2 === countryInfo.countryCode ||
-              country.iso3 === countryInfo.countryCode),
-        ),
-      );
-    const countryFlag = countryFlagData ? countryFlagData.flag : '';
+  async getCountriesFlag(): Promise<CountryFlag[]> {
+    return await this.countriesRepository.getCountriesFlag();
+  }
 
-
-    const countryPopulationData = await this.countriesRepository
-      .getCountriesPopulation()
-      .then((countryPopulation) =>
-        countryPopulation.data.find(
-          (country) => country && country.code === countryInfo.countryCode,
-        ),
-      );
-    const countryPopulation = countryPopulationData
-      ? countryPopulationData.populationCounts
-      : [];
-
-    return {
-      ...countryInfo,
-      countryFlag,
-      countryPopulation,
-    };
+  async getCountriesPopulation(): Promise<CountryPopulation[]> {
+    return await this.countriesRepository.getCountriesPopulation();
   }
 }
+
+// .then((countriesFlag) =>
+//   countriesFlag.data.find(
+//     (country) =>
+//       country &&
+//       (country.iso2 === countryInfo.countryCode ||
+//         country.iso3 === countryInfo.countryCode),
+//   ),
+// );
+// const countryFlag = countryFlagData ? countryFlagData.flag : '';
+
+// .then((countryPopulation) =>
+//   countryPopulation.data.find(
+//     (country) => country && country.code === countryInfo.countryCode,
+//   ),
+// );
+// const countryPopulation = countryPopulationData
+// ? countryPopulationData.populationCounts
+// : [];

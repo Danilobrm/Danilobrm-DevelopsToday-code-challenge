@@ -32,11 +32,7 @@ export class CountriesRepositoryService {
     }
   }
 
-  async getCountriesPopulation(): Promise<{
-    error: boolean;
-    msg: string;
-    data: CountryPopulation[];
-  }> {
+  async getCountriesPopulation(): Promise<CountryPopulation[]> {
     try {
       const population = await fetch(
         `https://countriesnow.space/api/v0.1/countries/population`,
@@ -44,17 +40,13 @@ export class CountriesRepositoryService {
           method: 'GET',
         },
       ).then((response) => response.json());
-      return population;
+      return population.data;
     } catch (error) {
       throw new AppError(error);
     }
   }
 
-  async getCountriesFlag(): Promise<{
-    error: boolean;
-    msg: string;
-    data: CountryFlag[];
-  }> {
+  async getCountriesFlag(): Promise<CountryFlag[]> {
     try {
       const flags = await fetch(
         `https://countriesnow.space/api/v0.1/countries/flag/images`,
@@ -63,7 +55,7 @@ export class CountriesRepositoryService {
         },
       ).then((response) => response.json());
 
-      return flags;
+      return flags.data;
     } catch (error) {
       throw new AppError(error);
     }
