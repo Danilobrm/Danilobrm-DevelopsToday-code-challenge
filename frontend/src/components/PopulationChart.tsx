@@ -12,7 +12,6 @@ import {
 } from "chart.js";
 import { CountryInfo } from "../models/countries.interface";
 
-// Register the necessary components for Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -24,20 +23,18 @@ ChartJS.register(
 );
 
 const PopulationChart = ({
-  data,
+  countryPopulation,
 }: {
-  data: CountryInfo["countryPopulation"];
+  countryPopulation: CountryInfo["populationCounts"];
 }) => {
-  // Map data to format needed for the chart
   const chartData = {
-    labels: data.map((item) => item.year), // X-axis: years
+    labels: countryPopulation.map((data) => data.year), // X-axis: years
     datasets: [
       {
         label: "Population",
-        data: data.map((item) => item.value), // Y-axis: population
+        data: countryPopulation.map((data) => data.value), // Y-axis: population
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
-        fill: true,
         tension: 0.4, // Curve effect
       },
     ],

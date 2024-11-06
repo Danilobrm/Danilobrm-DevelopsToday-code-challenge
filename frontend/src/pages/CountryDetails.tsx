@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CountryInfo } from "../models/countries.interface";
 import { getCountryInfo } from "../services/api";
@@ -7,39 +7,33 @@ import CountryInfoComponent from "../components/CountryInfoComponent";
 
 export default function CountryDetails() {
   const { countryCode } = useParams();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [countryInfo, setCountryInfo] = useState<CountryInfo | null>(() => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [country, setCountryInfo] = useState<CountryInfo | null>(() => {
     // Check if there's cached data for the specific country in localStorage
-    const cachedCountryInfo = localStorage.getItem(
-      `countryInfo_${countryCode}`
-    );
+    const cachedCountryInfo = localStorage.getItem(`${countryCode}`);
     return cachedCountryInfo ? JSON.parse(cachedCountryInfo) : null; // Parse and return cached data or null
   });
 
   useEffect(() => {
-    if (!countryInfo) fetchCountryInfo();
+    if (!country) fetchCountryInfo();
   }, []);
 
   async function fetchCountryInfo() {
-    setLoading(true);
+    setIsLoading(true);
     if (countryCode) {
       const country = await getCountryInfo(countryCode);
 
       if (country) {
-        console.log(country);
         setCountryInfo(country);
-        localStorage.setItem(
-          `countryInfo_${countryCode}`,
-          JSON.stringify(country)
-        );
+        localStorage.setItem(`${countryCode}`, JSON.stringify(country));
       }
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
   return (
-    <div style={{ margin: "0 auto", width: "fit-content" }}>
-      {loading ? (
+    <div style={{ margin: "0 auto", width: "80%" }}>
+      {isLoading ? (
         <div
           style={{
             display: "flex",
@@ -53,9 +47,7 @@ export default function CountryDetails() {
           <Loading />
         </div>
       ) : (
-        <>
-          <CountryInfoComponent countryInfo={countryInfo} />
-        </>
+        <CountryInfoComponent country={country} />
       )}
     </div>
   );

@@ -1,9 +1,8 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ListGroup } from "react-bootstrap";
 import { Country } from "../models/countries.interface";
 import { getCountries } from "../services/api";
 import { useNavigate } from "react-router-dom";
-import Loading from "./Loading";
 
 export const CountriesListComponent: React.FC = () => {
   const [countries, setCountries] = useState<Country[]>(() => {
@@ -39,19 +38,16 @@ export const CountryItem = React.memo(({ country }: { country: Country }) => {
   const navigate = useNavigate();
 
   const changeRoute = React.useCallback((countryCodeValue: string) => {
-    console.log("Aaa")
     navigate(`/country/${countryCodeValue.toLowerCase()}`);
   }, []);
 
   return (
-    <Suspense fallback={<Loading />}>
-      <ListGroup.Item
-        onClick={() => changeRoute(country.countryCode)}
-        action
-        style={{ cursor: "pointer" }}
-      >
-        {country.name}
-      </ListGroup.Item>
-    </Suspense>
+    <ListGroup.Item
+      onClick={() => changeRoute(country.countryCode)}
+      action
+      style={{ cursor: "pointer" }}
+    >
+      {country.name}
+    </ListGroup.Item>
   );
 });

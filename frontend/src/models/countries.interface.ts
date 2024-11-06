@@ -10,7 +10,7 @@ export interface CountryInfo {
   region: string;
   borders: CountryInfo[];
   countryFlag: string;
-  countryPopulation: {
+  populationCounts: {
     year: number;
     value: number;
   }[];
