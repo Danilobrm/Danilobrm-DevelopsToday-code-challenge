@@ -19,14 +19,15 @@ export class CountriesRepositoryService {
     }
   }
 
-  async getCountryInfo(countryCode: string): Promise<CountryInfo> {
+  async getCountryInfo(countryCode: string): Promise<CountryInfo | null> {
     try {
-      return await fetch(
+      const countryInfo = await fetch(
         `https://date.nager.at/api/v3/CountryInfo/${countryCode}`,
         {
           method: 'GET',
         },
       ).then((response) => response.json());
+      return countryInfo;
     } catch (error) {
       throw new AppError(error);
     }

@@ -2,14 +2,11 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { CountriesService } from '../services/countries.service';
 import {
   Country,
-  CountryFlag,
   CountryInfo,
   CountryPopulation,
 } from '../../domain/entities/countries.entity';
-import { AppError } from 'src/common/errors/AppError';
 
-interface CountryInfoTest {
-  countryInfo: CountryInfo;
+interface CountryResponse {
   countryFlag: string | '';
   populationCounts: CountryPopulation['populationCounts'];
 }
@@ -30,10 +27,13 @@ export class CountriesController {
   @Get('country/:countryCode')
   async getCountryInfo(
     @Param() param: { countryCode: string },
-  ): Promise<CountryInfoTest | AppError> {
+  ): Promise<(CountryInfo & CountryResponse) | null> {
     const { countryCode } = param;
 
     const countryInfo = await this.countriesService.getCountryInfo(countryCode); //iso2
+
+    if (!countryInfo.countryCode) return null;
+
     const countriesFlag = await this.countriesService.getCountriesFlag(); //iso2, iso3
     const countriesPopulation =
       await this.countriesService.getCountriesPopulation(); //iso3
@@ -59,7 +59,7 @@ export class CountriesController {
     );
 
     return {
-      countryInfo,
+      ...countryInfo,
       countryFlag: countryFlag || '',
       populationCounts: countryPopulation?.populationCounts || [],
     };

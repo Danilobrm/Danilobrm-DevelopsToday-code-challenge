@@ -9,7 +9,11 @@ export interface CountryInfo {
   countryCode: string;
   region: string;
   borders: CountryInfo[];
-  countryPopulation: CountryPopulation['populationCounts'];
+}
+
+export interface CountryData {
+  countryInfo: CountryInfo;
+  populationCounts: CountryPopulation['populationCounts'];
   countryFlag: CountryFlag['flag'];
 }
 
